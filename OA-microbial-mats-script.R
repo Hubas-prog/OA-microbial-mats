@@ -16,10 +16,7 @@ library(vegan)
 #### palette
 my.palette <- colorRampPalette(c("#DE4064","#FFAA5A","#FEEB94","#06D6A0","#4B7696"))
 
-my.palette(4)
-
 #### Upoload data
-
 raw.data <- read.csv("Table_physicochem_mesocosm - Feuille 1.csv",dec=",",h=T)
 no.na.data <- na.omit(raw.data)
 names(no.na.data)
@@ -53,12 +50,12 @@ var <- fviz_pca_var(res.mfa,
 )
 
 ind1 <- fviz_pca_ind(res.mfa,
-                     habillage = no.na.data$week,
+                     habillage = paste(no.na.data$week,no.na.data$treatment),
                      geom = "point",
                      legend.title = "Time",
                      addEllipse=T,
                      repel=TRUE,
-                     palette=c("#DE4064","#FFAA5A","#FEEB94","#06D6A0","#4B7696")
+                     palette=my.palette(16)
 )
 
 
@@ -69,8 +66,8 @@ plot_grid(ind1,var,nrow=1,labels=c("a","b"))
 ##########################################################
 
 # transformation du facteur en variable indicatrice
-var.ind <- dummy(paste(no.na.data$week))
-fac <- as.factor(paste(no.na.data$week))
+var.ind <- dummy(paste(no.na.data$week,no.na.data$treatment,sep=""))
+fac <- as.factor(paste(no.na.data$week,no.na.data$treatment,sep=""))
 
 # transformation racine carrée
 DATA.M <- as.matrix(sqrt(mfa.data))
@@ -112,4 +109,64 @@ between.interaction <- bca(res.mfa,as.factor(paste(no.na.data$treatment,no.na.da
 between.interaction$ratio
 randtest(between.interaction)
 plot(between.interaction)
+
+##########################################################
+#### Full analysis : P8
+##########################################################
+
+# extraction des k tables
+enviro.P8 <- no.na.data[no.na.data$week=="P8",5:14]
+pigments.P8 <- no.na.data[no.na.data$week=="P8",15:51]
+eps.P8 <- no.na.data[no.na.data$week=="P8",52:53]
+blocs.P8 <- c(dim(enviro.P8)[2],
+           dim(pigments.P8)[2],
+           dim(eps.P8)[2]
+)
+
+# standardisation par unité d'inertie
+mfa.data.P8 <- data.frame(
+  enviro.P8/dudi.pca(enviro.P8,scannf=F,nf=2)$eig[1],
+  pigments.P8/dudi.pca(pigments.P8,scannf=F,nf=2)$eig[1],
+  eps.P8/dudi.pca(eps.P8,scannf=F,nf=2)$eig[1]
+)
+
+# MFA
+res.mfa.P8 <- dudi.pca(mfa.data.P8,scannf=F,nf=2)
+
+var.P8 <- fviz_pca_var(res.mfa.P8,
+                    habillage=rep(c("enviro","pigments","eps"),blocs.P8),
+                    repel = TRUE     
+)
+
+ind1.P8 <- fviz_pca_ind(res.mfa.P8,
+                     habillage = paste(no.na.data$week,no.na.data$treatment)[no.na.data$week=="P8"],
+                     geom = "point",
+                     legend.title = "Time",
+                     addEllipse=T,
+                     repel=TRUE,
+                     palette=my.palette(4)
+)
+
+
+plot_grid(ind1.P8,var.P8,nrow=2,labels=c("a","b"))
+
+# transformation du facteur en variable indicatrice
+var.ind.P8 <- dummy(paste(no.na.data$week,no.na.data$treatment,sep="")[no.na.data$week=="P8"])
+fac.P8 <- as.factor(paste(no.na.data$week,no.na.data$treatment,sep="")[no.na.data$week=="P8"])
+
+# transformation racine carrée
+DATA.M.P8 <- as.matrix(sqrt(mfa.data.P8))
+
+# modèle Canonical Powered Partial least squared (PLS) regression
+PLSDA.P8<-cppls(var.ind.P8 ~ DATA.M.P8) 
+
+par(mfrow=c(2,1))
+MVA.plot(PLSDA.P8, "scores", fac=fac.P8, cex = 0.8, col=my.palette(length(levels(fac.P8))))
+MVA.plot(PLSDA.P8, "corr", thres = 0, fac=rep(c("enviro","pigments","eps"),blocs), arrows = FALSE, cex = 0.7,intcircle = 0.5,points=F,col=rainbow(3))
+
+# BCA treatment
+between.treatment.P8 <- bca(res.mfa.P8,fac.P8,scannf=F,nf=2)
+between.treatment.P8$ratio
+randtest(between.treatment.P8)
+plot(between.treatment.P8)
 
