@@ -20,7 +20,7 @@ my.palette(4)
 
 #### Upoload data
 
-raw.data <- read.csv("/Users/cedric.hubas/Downloads/Table_physicochem_mesocosm - Feuille 1.csv",dec=",",h=T)
+raw.data <- read.csv("Table_physicochem_mesocosm - Feuille 1.csv",dec=",",h=T)
 no.na.data <- na.omit(raw.data)
 names(no.na.data)
 
@@ -80,7 +80,7 @@ PLSDA<-cppls(var.ind ~ DATA.M, ncomp=20)
 summary (PLSDA)
 attributes(PLSDA)
 
-par(mfrow=c(1,2))
+par(mfrow=c(2,1))
 MVA.plot(PLSDA, "scores", fac=fac, cex = 0.8, col=my.palette(length(levels(fac))))
 MVA.plot(PLSDA, "corr", thres = 0, fac=rep(c("enviro","pigments","eps"),blocs), arrows = FALSE, cex = 0.7,intcircle = 0.5,points=F,col=rainbow(3))
 
@@ -97,12 +97,19 @@ test2a2 <-pairwise.MVA.test(DATA.M, fac ,model="PPLS-DA",cmv=TRUE,ncomp=6,kout=5
 #### Supervised analysis 2 : between-class analysis
 ##########################################################
 
-between.weeks <- bca(mfa.data,as.factor(paste(no.na.data$week)),scannf=F,nf=2)
+# BCA temps
+between.weeks <- bca(res.mfa,as.factor(paste(no.na.data$week)),scannf=F,nf=2)
 between.weeks$ratio
+randtest(between.weeks)
 
-between.treaments <- bca(mfa.data,as.factor(paste(no.na.data$treatments)),scannf=F,nf=2)
-between.treaments$ratio
+# BCA treatment
+between.treatment <- bca(res.mfa,as.factor(paste(no.na.data$treatment)),scannf=F,nf=2)
+between.treatment$ratio
+randtest(between.treatment)
 
-#Test pull reverse
-# again
+# BCA interaction
+between.interaction <- bca(res.mfa,as.factor(paste(no.na.data$treatment,no.na.data$week)),scannf=F,nf=2)
+between.interaction$ratio
+randtest(between.interaction)
+plot(between.interaction)
 
