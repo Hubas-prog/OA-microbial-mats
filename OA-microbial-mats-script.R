@@ -28,7 +28,7 @@ names(no.na.data)
 # extraction des k tables
 enviro <- no.na.data[,5:14]
 pigments <- no.na.data[,15:51]
-eps <- no.na.data[,52:53]
+eps <- no.na.data[,52:55]
 blocs <- c(dim(enviro)[2],
            dim(pigments)[2],
            dim(eps)[2]
@@ -59,7 +59,7 @@ ind1 <- fviz_pca_ind(res.mfa,
 )
 
 
-plot_grid(ind1,var,nrow=1,labels=c("a","b"))
+plot_grid(ind1,var,nrow=2,labels=c("a","b"))
 
 ##########################################################
 #### Supervised analysis : analyse discriminate PPLS-DA
@@ -70,7 +70,7 @@ var.ind <- dummy(paste(no.na.data$week,no.na.data$treatment,sep=""))
 fac <- as.factor(paste(no.na.data$week,no.na.data$treatment,sep=""))
 
 # transformation racine carrée
-DATA.M <- as.matrix(sqrt(mfa.data))
+DATA.M <- as.matrix(decostand(mfa.data,"hellinger"))
 
 # modèle Canonical Powered Partial least squared (PLS) regression
 PLSDA<-cppls(var.ind ~ DATA.M, ncomp=20) 
@@ -94,16 +94,6 @@ test2a2 <-pairwise.MVA.test(DATA.M, fac ,model="PPLS-DA",cmv=TRUE,ncomp=6,kout=5
 #### Supervised analysis 2 : between-class analysis
 ##########################################################
 
-# BCA temps
-between.weeks <- bca(res.mfa,as.factor(paste(no.na.data$week)),scannf=F,nf=2)
-between.weeks$ratio
-randtest(between.weeks)
-
-# BCA treatment
-between.treatment <- bca(res.mfa,as.factor(paste(no.na.data$treatment)),scannf=F,nf=2)
-between.treatment$ratio
-randtest(between.treatment)
-
 # BCA interaction
 between.interaction <- bca(res.mfa,as.factor(paste(no.na.data$treatment,no.na.data$week)),scannf=F,nf=2)
 between.interaction$ratio
@@ -117,7 +107,7 @@ plot(between.interaction)
 # extraction des k tables
 enviro.P8 <- no.na.data[no.na.data$week=="P8",5:14]
 pigments.P8 <- no.na.data[no.na.data$week=="P8",15:51]
-eps.P8 <- no.na.data[no.na.data$week=="P8",52:53]
+eps.P8 <- no.na.data[no.na.data$week=="P8",52:55]
 blocs.P8 <- c(dim(enviro.P8)[2],
            dim(pigments.P8)[2],
            dim(eps.P8)[2]
@@ -155,7 +145,7 @@ var.ind.P8 <- dummy(paste(no.na.data$week,no.na.data$treatment,sep="")[no.na.dat
 fac.P8 <- as.factor(paste(no.na.data$week,no.na.data$treatment,sep="")[no.na.data$week=="P8"])
 
 # transformation racine carrée
-DATA.M.P8 <- as.matrix(sqrt(mfa.data.P8))
+DATA.M.P8 <- as.matrix(decostand(mfa.data.P8,"hellinger"))
 
 # modèle Canonical Powered Partial least squared (PLS) regression
 PLSDA.P8<-cppls(var.ind.P8 ~ DATA.M.P8) 
