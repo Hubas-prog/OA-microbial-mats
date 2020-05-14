@@ -113,7 +113,7 @@ blocs.P8 <- c(dim(enviro.P8)[2],
            dim(eps.P8)[2]
 )
 
-# standardisation par unité d'inertie
+#  standardisation par unité d'inertie
 mfa.data.P8 <- data.frame(
   enviro.P8/dudi.pca(enviro.P8,scannf=F,nf=2)$eig[1],
   pigments.P8/dudi.pca(pigments.P8,scannf=F,nf=2)$eig[1],
