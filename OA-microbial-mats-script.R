@@ -13,7 +13,7 @@ library(pls)
 library(RVAideMemoire)
 library(vegan)
 
-#### palette
+#### palettes
 my.palette <- colorRampPalette(c("#DE4064","#FFAA5A","#FEEB94","#06D6A0","#4B7696"))
 
 #### Upoload data
