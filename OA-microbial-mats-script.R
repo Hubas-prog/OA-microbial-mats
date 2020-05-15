@@ -157,6 +157,31 @@ MVA.plot(PLSDA.P8, "corr", thres = 0, fac=rep(c("enviro","pigments","eps"),blocs
 # BCA treatment
 between.treatment.P8 <- bca(res.mfa.P8,fac.P8,scannf=F,nf=2)
 between.treatment.P8$ratio
+
+plot(between.treatment.P8$ls,col=my.palette(length(levels(fac.P8)))[fac.P8])
+s.class(between.treatment.P8$ls,fac.P8,
+        add.plot=T,
+        col=my.palette(length(levels(fac.P8))),
+        axesell = F,
+        cellipse=0
+        )
+plot(between.treatment.P8$co,type="n")
+arrows(x0 = 0,
+       y0=0,
+       x1=between.treatment.P8$co[,1],
+       y1=between.treatment.P8$co[,2],
+       col=alpha(rainbow(3)[as.factor(rep(c("enviro","pigments","eps"),blocs))],0.5),
+       length=0.2
+       )
+text(x=between.treatment.P8$co[,1],
+     y=between.treatment.P8$co[,2],
+     rownames(between.treatment.P8$co),
+     col=rainbow(3)[as.factor(rep(c("enviro","pigments","eps"),blocs))],
+     cex=0.7
+     )
+abline(h=0,col="grey")
+abline(v=0,col="grey")
+
 randtest(between.treatment.P8)
 plot(between.treatment.P8)
 
