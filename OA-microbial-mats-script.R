@@ -55,7 +55,7 @@ ind1 <- fviz_pca_ind(res.mfa,
                      legend.title = "Time",
                      addEllipse=T,
                      repel=TRUE,
-                     palette=my.palette(16)
+                     palette=my.palette(24)
 )
 
 
