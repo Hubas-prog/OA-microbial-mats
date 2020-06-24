@@ -34,32 +34,24 @@ blocs <- c(dim(enviro)[2],
            dim(eps)[2]
 )
 
-# standardisation par unité d'inertie
-mfa.data <- data.frame(
-  enviro/dudi.pca(enviro,scannf=F,nf=2)$eig[1],
-  pigments/dudi.pca(pigments,scannf=F,nf=2)$eig[1],
-  eps/dudi.pca(eps,scannf=F,nf=2)$eig[1]
-)
+# jeu de données
+pca.data <- data.frame(
+  enviro,
+  pigments,
+  eps)
 
-# MFA
-res.mfa <- dudi.pca(mfa.data,scannf=F,nf=2)
+# changement des poids
+res.mfa <- dudi.pca(pca.data,col.w = rep(c(1/dudi.pca(enviro,scannf=F,nf=2)$eig[1],
+                                           rep(1/dudi.pca(pigments,scannf=F,nf=2)$eig[1]),
+                                           rep(1/dudi.pca(eps,scannf=F,nf=2)$eig[1])),blocs),
+                    scannf=F,nf=2)
 
-var <- fviz_pca_var(res.mfa,
-                    habillage=rep(c("enviro","pigments","eps"),blocs),
-                    repel = TRUE     
-)
-
-ind1 <- fviz_pca_ind(res.mfa,
-                     habillage = paste(no.na.data$week,no.na.data$treatment),
-                     geom = "point",
-                     legend.title = "Time",
-                     addEllipse=T,
-                     repel=TRUE,
-                     palette=my.palette(24)
-)
+plot(res.mfa$li,main="MFA")
+s.class(res.mfa$li,
+        as.factor(paste(no.na.data$week,no.na.data$treatment)),
+        col=my.palette(24),add.plot=T)
 
 
-plot_grid(ind1,var,nrow=2,labels=c("a","b"))
 
 ##########################################################
 #### Supervised analysis : analyse discriminate PPLS-DA
@@ -70,7 +62,7 @@ var.ind <- dummy(paste(no.na.data$week,no.na.data$treatment,sep=""))
 fac <- as.factor(paste(no.na.data$week,no.na.data$treatment,sep=""))
 
 # transformation racine carrée
-DATA.M <- as.matrix(decostand(mfa.data,"hellinger"))
+DATA.M <- as.matrix(decostand(pca.data,"hellinger"))
 
 # modèle Canonical Powered Partial least squared (PLS) regression
 PLSDA<-cppls(var.ind ~ DATA.M, ncomp=20) 
@@ -95,7 +87,9 @@ test2a2 <-pairwise.MVA.test(DATA.M, fac ,model="PPLS-DA",cmv=TRUE,ncomp=6,kout=5
 ##########################################################
 
 # BCA interaction
-between.interaction <- bca(res.mfa,as.factor(paste(no.na.data$treatment,no.na.data$week)),scannf=F,nf=2)
+between.interaction <- bca(res.mfa,
+                           as.factor(paste(no.na.data$week)),
+                           scannf=F,nf=2)
 between.interaction$ratio
 randtest(between.interaction)
 plot(between.interaction)
@@ -114,31 +108,23 @@ blocs.P8 <- c(dim(enviro.P8)[2],
 )
 
 #  standardisation par unité d'inertie
-mfa.data.P8 <- data.frame(
-  enviro.P8/dudi.pca(enviro.P8,scannf=F,nf=2)$eig[1],
-  pigments.P8/dudi.pca(pigments.P8,scannf=F,nf=2)$eig[1],
-  eps.P8/dudi.pca(eps.P8,scannf=F,nf=2)$eig[1]
-)
+pca.data.P8 <- data.frame(
+  enviro.P8,
+  pigments.P8,
+  eps.P8)
 
 # MFA
-res.mfa.P8 <- dudi.pca(mfa.data.P8,scannf=F,nf=2)
+res.mfa.P8 <- dudi.pca(pca.data.P8,col.w = rep(c(1/dudi.pca(enviro.P8,scannf=F,nf=2)$eig[1],
+                                                 rep(1/dudi.pca(pigments.P8,scannf=F,nf=2)$eig[1]),
+                                                 rep(1/dudi.pca(eps.P8,scannf=F,nf=2)$eig[1])),blocs.P8),
+                       scannf=F,nf=2)
 
-var.P8 <- fviz_pca_var(res.mfa.P8,
-                    habillage=rep(c("enviro","pigments","eps"),blocs.P8),
-                    repel = TRUE     
-)
+plot(res.mfa.P8$li,main="MFA")
+s.class(res.mfa.P8$li,
+        as.factor(paste(no.na.data$week[no.na.data$week=="P8"],
+                        no.na.data$treatmen[no.na.data$week=="P8"])),
+        col=my.palette(4),add.plot=T)
 
-ind1.P8 <- fviz_pca_ind(res.mfa.P8,
-                     habillage = paste(no.na.data$week,no.na.data$treatment)[no.na.data$week=="P8"],
-                     geom = "point",
-                     legend.title = "Time",
-                     addEllipse=T,
-                     repel=TRUE,
-                     palette=my.palette(4)
-)
-
-
-plot_grid(ind1.P8,var.P8,nrow=2,labels=c("a","b"))
 
 # transformation du facteur en variable indicatrice
 var.ind.P8 <- dummy(paste(no.na.data$week,no.na.data$treatment,sep="")[no.na.data$week=="P8"])
