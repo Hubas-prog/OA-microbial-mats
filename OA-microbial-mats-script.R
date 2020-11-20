@@ -68,6 +68,7 @@ lapply(all.pig.list,make.subplot.all.pig)
 par(mfrow=c(2,4),mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.short.pig)
 
+
 gdat<-pig.data[raw.pig.data$treatment!="Ctr.bis",]
 Treatments<-raw.pig.data$treatment[raw.pig.data$treatment!="Ctr.bis"]
 Treatments<-gsub(pattern = "PH","pH",Treatments)
