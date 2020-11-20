@@ -16,14 +16,77 @@ library(vegan)
 #### palettes
 my.palette <- colorRampPalette(c("#DE4064","#FFAA5A","#FEEB94","#06D6A0","#4B7696"))
 
-#### Upoload data
-raw.data <- read.csv("Table_physicochem_mesocosm - Feuille 1.csv",dec=",",h=T)
-no.na.data <- na.omit(raw.data)
-names(no.na.data)
+#### Upload pigment data
+all.pig.data <- read.table("Pourcentages.txt",h=T)
+all.pig.data$treatment<-factor(gsub(pattern = "PH","pH",all.pig.data$treatment))
+short.pig.data <- read.table("POURCENT.txt",h=T)
+all.pig.data$treatment
+
+##########################################################
+#### Pigment analysis : BCA
+###########################################################
+all.pig.data2 <- all.pig.data[raw.pig.data$treatment!="Ctr.bis",]
+short.pig.data2 <- short.pig.data[raw.pig.data$treatment!="Ctr.bis",]
+short.pig.data2$treatment<-all.pig.data2$treatment
+
+all.pig.list<-split(all.pig.data2,all.pig.data2$time)
+short.pig.list<-split(short.pig.data2,all.pig.data2$time)
+
+names(short.pig.list$P1)
+
+data=all.pig.data2
+f="treatment"
+n=37
+
+make.subplot.all.pig<-function(data){
+  res.pca <- dudi.pca(data[,1:37],scannf=F,nf=2)
+  factor<-factor(data[,which(names(data)=="treatment")])
+  res.bca <- bca(res.pca, factor, scannf = FALSE, nf = 2)
+  plot(res.bca$ls,
+       pch=21,
+       col="white",
+       bg=my.palette(length(levels(factor)))[factor],
+       cex=3)
+  ordicluster(res.bca$ls,hclust(vegdist(data[,1:37],"bray"),"ward.D2",))
+}
+
+make.subplot.short.pig<-function(data){
+  res.pca <- dudi.pca(data[,1:20],scannf=F,nf=2)
+  factor<-factor(data[,which(names(data)=="treatment")])
+  res.bca <- bca(res.pca, factor, scannf = FALSE, nf = 2)
+  plot(res.bca$ls,
+       pch=21,
+       col="white",
+       bg=my.palette(length(levels(factor)))[factor],
+       cex=3)
+  ordicluster(res.bca$ls,hclust(vegdist(data[,1:20],"bray"),"ward.D2",))
+}
+
+par(mfrow=c(2,4),mar=c(0,0,0,0))
+lapply(all.pig.list,make.subplot.all.pig)
+
+par(mfrow=c(2,4),mar=c(0,0,0,0))
+lapply(all.pig.list,make.subplot.short.pig)
+
+gdat<-pig.data[raw.pig.data$treatment!="Ctr.bis",]
+Treatments<-raw.pig.data$treatment[raw.pig.data$treatment!="Ctr.bis"]
+Treatments<-gsub(pattern = "PH","pH",Treatments)
+ggplot(gdat,aes(x = raw.pig.data$time[raw.pig.data$treatment!="Ctr.bis"],
+                y= Ca.iso,
+                col=Treatments)) +
+    geom_boxplot()+
+    theme_bw()
+
 
 ##########################################################
 #### Unsupervised analysis : multiple factor analysis (MFA)
 ###########################################################
+
+#### Upload data for MFA
+all.data <- read.csv("Table_physicochem_mesocosm - Feuille 1.csv",dec=",",h=T)
+no.na.data <- na.omit(all.data)
+names(no.na.data)
+
 
 # extraction des k tables
 enviro <- no.na.data[,5:14]
