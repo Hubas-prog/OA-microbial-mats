@@ -34,8 +34,8 @@ all.pig.data$treatment
 ##########################################
 
 # Data Homogeneization
-all.pig.data2 <- all.pig.data[raw.pig.data$treatment!="Ctr.bis",]
-short.pig.data2 <- short.pig.data[raw.pig.data$treatment!="Ctr.bis",]
+all.pig.data2 <- all.pig.data[all.pig.data$treatment!="Ctr.bis",]
+short.pig.data2 <- short.pig.data[all.pig.data$treatment!="Ctr.bis",]
 short.pig.data2$time<-all.pig.data2$time
 short.pig.data2$treatment<-all.pig.data2$treatment
 
@@ -67,16 +67,38 @@ make.subplot.short.pig<-function(data){
        bg=my.palette(length(levels(factor)))[factor],
        cex=3)
   ordicluster(res.bca$ls,hclust(vegdist(data[,1:20],"bray"),"ward.D2",))
+  
 }
 
 # make plots
-par(mfrow=c(2,4),mar=c(0,0,0,0))
+layout(matrix(c(1,3,5,7,2,4,6,8,9,9,9,9),ncol=3))
+par(mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.all.pig)
+X<-dudi.pca(all.pig.data2[all.pig.data2$time=="P6",1:37],scannf=F,nf=2)
+Fa<-factor(all.pig.data2[all.pig.data2$time=="P6",]$treatment)
+coord<-bca(X,Fa,scannf=F,nf=2)$co
+plot(coord,type="n")
+arrows(x0=0,y0=0,x1=coord$Comp1,y1=coord$Comp2,col="lightgrey")
+text(x=coord$Comp1,y=coord$Comp2,rownames(coord),cex=1.5)
+abline(h=0,lty="dashed")
+abline(v=0,lty="dashed")
 
-par(mfrow=c(2,4),mar=c(0,0,0,0))
+
+layout(matrix(c(1,3,5,7,2,4,6,8,9,9,9,9),ncol=3))
+par(mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.short.pig)
+X<-dudi.pca(short.pig.data2[short.pig.data2$time=="P6",1:20],scannf=F,nf=2)
+Fa<-factor(short.pig.data2[short.pig.data2$time=="P6",]$treatment)
+coord<-bca(X,Fa,scannf=F,nf=2)$co
+plot(coord,type="n")
+arrows(x0=0,y0=0,x1=coord$Comp1,y1=coord$Comp2,col="lightgrey")
+text(x=coord$Comp1,y=coord$Comp2,rownames(coord),cex=1.5)
+abline(h=0,lty="dashed")
+abline(v=0,lty="dashed")
+
 
 # Focus on Chlorophyll a derivatives
+
 ggplot(short.pig.data2,
        aes(x = time,
            y= Ca.iso,
@@ -85,6 +107,71 @@ ggplot(short.pig.data2,
   ylab("Chlorophyll a derivatives (%)")+
   xlab("Time")+
   theme_bw()
+
+time.j<-c(1,8,15,23,30,37,44,51)[short.pig.data2$time]
+
+smooth_iso<-ggplot(short.pig.data2,
+       aes(x = time.j,
+           y= Ca.iso,
+           col=treatment))+
+  geom_point()+
+  geom_smooth(aes(fill=treatment),method = "loess")+
+  ylab("Chlorophyll a derivatives (%)")+
+  xlab("Time")+
+  theme_bw()
+
+# Focus on Chlorophyll a
+ggplot(short.pig.data2,
+       aes(x = time,
+           y= Ca,
+           col=treatment))+
+  geom_boxplot()+
+  ylab("Chlorophyll a (%)")+
+  xlab("Time")+
+  theme_bw()
+
+smooth_ca<-ggplot(short.pig.data2,
+       aes(x = time.j,
+           y= Ca,
+           col=treatment))+
+  geom_point()+
+  geom_smooth(aes(fill=treatment),method = "loess")+
+  ylab("Chlorophyll a (%)")+
+  xlab("Time")+
+  theme_bw()
+
+# Focus on Pheophytin a
+ggplot(short.pig.data2,
+       aes(x = time,
+           y= Pha,
+           col=treatment))+
+  geom_boxplot()+
+  ylab("Pheophytin a (%)")+
+  xlab("Time")+
+  theme_bw()
+
+smooth_Pha<-ggplot(short.pig.data2,
+                  aes(x = time.j,
+                      y= Pha,
+                      col=treatment))+
+  geom_point()+
+  geom_smooth(aes(fill=treatment),method = "loess")+
+  ylab("Pheophytin a (%)")+
+  xlab("Time")+
+  theme_bw()
+
+# plot grid
+plot_grid(smooth_ca,smooth_iso,smooth_Pha,labels=c("a","b","c"),nrow=3)
+
+ggplot(short.pig.data2,
+                  aes(x = time,
+                      y= Ca.iso/Pha,
+                      col=treatment))+
+  geom_boxplot()+
+  ylab("metalation ratio")+
+  xlab("Time")+
+  theme_bw()
+
 
 
 ##########################################################
