@@ -83,7 +83,6 @@ text(x=coord$Comp1,y=coord$Comp2,rownames(coord),cex=1.5)
 abline(h=0,lty="dashed")
 abline(v=0,lty="dashed")
 
-
 layout(matrix(c(1,3,5,7,2,4,6,8,9,9,9,9),ncol=3))
 par(mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.short.pig)
