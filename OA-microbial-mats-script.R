@@ -171,8 +171,6 @@ ggplot(short.pig.data2,
   xlab("Time")+
   theme_bw()
 
-
-
 ##########################################################
 #### Unsupervised analysis : multiple factor analysis (MFA)
 ###########################################################
