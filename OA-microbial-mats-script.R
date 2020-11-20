@@ -1,9 +1,12 @@
-####### OA experiment - Mudflats - La Rochelle #######
-####### script by : C. Hubas                   #######
-####### Data : C. Mazière, M. Bodo et al       #######
+##########################################
+# OA experiment - Mudflats 
+# script by : C. Hubas 
+# Data : C. Mazière, M. Bodo et al 
+##########################################
 
-
-#### Packages
+##########################################
+# Packages
+##########################################
 
 library(ade4)
 library(ggplot2)
@@ -13,31 +16,34 @@ library(pls)
 library(RVAideMemoire)
 library(vegan)
 
-#### palettes
+##########################################
+# Aesthetics
+##########################################
+
+# palettes
 my.palette <- colorRampPalette(c("#DE4064","#FFAA5A","#FEEB94","#06D6A0","#4B7696"))
 
-#### Upload pigment data
-all.pig.data <- read.table("Pourcentages.txt",h=T)
+# Upload pigment data
+all.pig.data <- read.table("Pourcentages.txt",h=T) # all pigments
 all.pig.data$treatment<-factor(gsub(pattern = "PH","pH",all.pig.data$treatment))
-short.pig.data <- read.table("POURCENT.txt",h=T)
+short.pig.data <- read.table("POURCENT.txt",h=T) # pigments grouping
 all.pig.data$treatment
 
-##########################################################
-#### Pigment analysis : BCA
-###########################################################
+##########################################
+# Pigment Analysis
+##########################################
+
+# Data Homogeneization
 all.pig.data2 <- all.pig.data[raw.pig.data$treatment!="Ctr.bis",]
 short.pig.data2 <- short.pig.data[raw.pig.data$treatment!="Ctr.bis",]
+short.pig.data2$time<-all.pig.data2$time
 short.pig.data2$treatment<-all.pig.data2$treatment
 
+# make lists
 all.pig.list<-split(all.pig.data2,all.pig.data2$time)
 short.pig.list<-split(short.pig.data2,all.pig.data2$time)
 
-names(short.pig.list$P1)
-
-data=all.pig.data2
-f="treatment"
-n=37
-
+# function for all.pig dataset
 make.subplot.all.pig<-function(data){
   res.pca <- dudi.pca(data[,1:37],scannf=F,nf=2)
   factor<-factor(data[,which(names(data)=="treatment")])
@@ -50,6 +56,7 @@ make.subplot.all.pig<-function(data){
   ordicluster(res.bca$ls,hclust(vegdist(data[,1:37],"bray"),"ward.D2",))
 }
 
+# function for short.pig dataset
 make.subplot.short.pig<-function(data){
   res.pca <- dudi.pca(data[,1:20],scannf=F,nf=2)
   factor<-factor(data[,which(names(data)=="treatment")])
@@ -62,21 +69,22 @@ make.subplot.short.pig<-function(data){
   ordicluster(res.bca$ls,hclust(vegdist(data[,1:20],"bray"),"ward.D2",))
 }
 
+# make plots
 par(mfrow=c(2,4),mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.all.pig)
 
 par(mfrow=c(2,4),mar=c(0,0,0,0))
 lapply(all.pig.list,make.subplot.short.pig)
 
-
-gdat<-pig.data[raw.pig.data$treatment!="Ctr.bis",]
-Treatments<-raw.pig.data$treatment[raw.pig.data$treatment!="Ctr.bis"]
-Treatments<-gsub(pattern = "PH","pH",Treatments)
-ggplot(gdat,aes(x = raw.pig.data$time[raw.pig.data$treatment!="Ctr.bis"],
-                y= Ca.iso,
-                col=Treatments)) +
-    geom_boxplot()+
-    theme_bw()
+# Focus on Chlorophyll a derivatives
+ggplot(short.pig.data2,
+       aes(x = time,
+           y= Ca.iso,
+           col=treatment))+
+  geom_boxplot()+
+  ylab("Chlorophyll a derivatives (%)")+
+  xlab("Time")+
+  theme_bw()
 
 
 ##########################################################
