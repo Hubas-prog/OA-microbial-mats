@@ -183,27 +183,27 @@ title("variables-P8")
 
 # boxplots
 box.ca.iso<-ggplot(short.pig.data,
-       aes(x = time,
-           y= Ca.iso,
-           col=treatment))+
+                   aes(x = time,
+                       y= Ca.iso,
+                       col=treatment))+
   geom_boxplot()+
   ylab("Chlorophyll a derivatives (%)")+
   xlab("Time")+
   theme_bw()
 
 box.ca<-ggplot(short.pig.data,
-       aes(x = time,
-           y= Ca,
-           col=treatment))+
+               aes(x = time,
+                   y= Ca,
+                   col=treatment))+
   geom_boxplot()+
   ylab("Chlorophyll a (%)")+
   xlab("Time")+
   theme_bw()
 
 box.pha<-ggplot(short.pig.data,
-       aes(x = time,
-           y= Pha,
-           col=treatment))+
+                aes(x = time,
+                    y= Pha,
+                    col=treatment))+
   geom_boxplot()+
   ylab("Pheophytin a (%)")+
   xlab("Time")+
@@ -215,9 +215,9 @@ plot_grid(box.ca,box.ca.iso,box.pha,labels=c("a","b","c"),nrow=3)
 time.j<-c(1,8,15,23,30,37,44,51)[short.pig.data$time]
 
 smooth_iso<-ggplot(short.pig.data,
-       aes(x = time.j,
-           y= Ca.iso,
-           col=treatment))+
+                   aes(x = time.j,
+                       y= Ca.iso,
+                       col=treatment))+
   geom_point()+
   geom_smooth(aes(fill=treatment),method = "loess")+
   ylab("Chlorophyll a derivatives (%)")+
@@ -225,9 +225,9 @@ smooth_iso<-ggplot(short.pig.data,
   theme_bw()
 
 smooth_ca<-ggplot(short.pig.data,
-       aes(x = time.j,
-           y= Ca,
-           col=treatment))+
+                  aes(x = time.j,
+                      y= Ca,
+                      col=treatment))+
   geom_point()+
   geom_smooth(aes(fill=treatment),method = "loess")+
   ylab("Chlorophyll a (%)")+
@@ -235,9 +235,9 @@ smooth_ca<-ggplot(short.pig.data,
   theme_bw()
 
 smooth_Pha<-ggplot(short.pig.data,
-                  aes(x = time.j,
-                      y= Pha,
-                      col=treatment))+
+                   aes(x = time.j,
+                       y= Pha,
+                       col=treatment))+
   geom_point()+
   geom_smooth(aes(fill=treatment),method = "loess")+
   ylab("Pheophytin a (%)")+
@@ -248,11 +248,10 @@ plot_grid(smooth_ca,smooth_iso,smooth_Pha,labels=c("a","b","c"),nrow=3)
 
 # Ratio Chlorophyll a like vs. true Chlorophyll a
 ggplot(short.pig.data,
-                  aes(x = time,
-                      y= Ca.iso/Pha,
-                      col=treatment))+
+       aes(x = time,
+           y= Ca.iso/Pha,
+           col=treatment))+
   geom_boxplot()+
   ylab("metalation ratio")+
   xlab("Time")+
   theme_bw()
-
