@@ -228,7 +228,7 @@ smooth_Pha<-ggplot(short.pig.data2,
   xlab("Time")+
   theme_bw()
 
-plot_grid(smooth_ca,smooth_iso,smooth_Pha,labels=c("a","b","c"),nrow=3)
+plot_grid(smooth_ca,smooth_iso,smooth_Pha,labels=c("a","b","c"),nrow=1)
 
 # Ratio Chlorophyll a like vs. true Chlorophyll a
 ggplot(short.pig.data2,
