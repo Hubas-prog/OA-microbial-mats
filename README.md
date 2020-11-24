@@ -6,6 +6,6 @@ Ce dépôt est destiné à l'échange de données et d'informations dans le cadr
 
 Participants : 
 
-Université de Pau et Pays de l'Adour, Institut des Sciences Analytiques et de Physico-Chimie pour l'Environnement et les Matériaux (IPREM), https://iprem.univ-pau.fr/fr/index.html; 
+Université de Pau et des Pays de l'Adour (UPPA), Institut des Sciences Analytiques et de Physico-Chimie pour l'Environnement et les Matériaux (IPREM), https://iprem.univ-pau.fr/fr/index.html; 
 Université de La Rochelle, Laboratoire : LIttoral ENvironnement et Sociétés (LIENSs) https://lienss.univ-larochelle.fr/?lang=fr ,équipe BIOFEEL; 
-Muséum National d'Histoire Naturelle, Laboratoire de Biologie des Organismes et Ecosystèmes Aquatiques (BOREA) https://borea.mnhn.fr/, équipe SOMAQUA 
+Muséum National d'Histoire Naturelle (MNHN), Laboratoire de Biologie des Organismes et Ecosystèmes Aquatiques (BOREA) https://borea.mnhn.fr/, équipe SOMAQUA 
