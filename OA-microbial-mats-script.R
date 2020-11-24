@@ -84,6 +84,11 @@ layout(matrix(c(1,3,5,7,2,4,6,8,9,9,9,9),ncol=3))
 par(mar=c(2,1,1,1))
 # plot individuals
 lapply(no.na.data.split,make.BC.MFA)
+# Add legend
+legend("topleft",
+       c("C","pH","TC","TC/pH"),
+       text.col = my.palette(4),
+       bty="n")
 # plot variables for a chosen sampling time (here "P8")
 X<-dudi.pca(no.na.data.split$P8[,5:55],scannf=F,nf=2)
 Fa<-factor(no.na.data.split$P8$treatment)
@@ -103,8 +108,6 @@ text(x=coord$Comp1,
 abline(h=0,lty="dashed")
 abline(v=0,lty="dashed")
 title("variables-P8")
-
-
 
 
 
