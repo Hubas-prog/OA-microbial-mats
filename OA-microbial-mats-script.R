@@ -10,10 +10,7 @@
 
 library(ade4)
 library(ggplot2)
-library(factoextra)
 library(cowplot)
-library(pls)
-library(RVAideMemoire)
 library(vegan)
 
 ##########################################
