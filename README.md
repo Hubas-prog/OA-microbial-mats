@@ -12,7 +12,7 @@ Muséum National d'Histoire Naturelle (MNHN), Laboratoire de Biologie des Organi
 
 Description :
 
-Le fichier "OA-microbial-mats-script.R" regroupe les analyses statistiques dans un script R. Il necessite le fichier "Table_physicochem_mesocosm - Feuille 1.csv" qui contient toutes les données récoltées pendant l'expérience.
+Le fichier "OA-microbial-mats-script.R" regroupe les analyses statistiques dans un script R. Il necessite le fichier "Physico-chem_MESO_modif.csv" qui contient toutes les données récoltées pendant l'expérience.
 
 Packages R utilisés :
 
