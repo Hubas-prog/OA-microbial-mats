@@ -1,7 +1,5 @@
 # OA-microbial-mats
 
-Object : working repository of Microbial Mat- Ocean Acidification experiment
-
 Contexte :
 
 Ce dépôt est destiné à l'échange de données et d'informations dans le cadre de l'expérience d'acidification de tapis microbiens de la thèse de Camille Mazière (Université de Pau et Université de La Rochelle)
