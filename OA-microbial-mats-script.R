@@ -176,6 +176,7 @@ abline(h=0,lty="dashed")
 abline(v=0,lty="dashed")
 title("variables-P8")
 
+boxplot(short.pig.data$Ca.iso[short.pig.data$time=="P8"]/short.pig.data$Pha[short.pig.data$time=="P8"]~short.pig.data$treatment[short.pig.data$time=="P8"])
 
 ##########################################
 # Focus on Chlorophyll a "derivatives"like" pigments
